@@ -5,7 +5,33 @@ import json
 from slickrpc import Proxy
 
 
-# fucntion to define rpc_connection
+# function to get integer user input within a range
+def selectRangeInt(low,high, msg):
+    while True:
+        try:
+            number = int(input(msg))
+        except ValueError:
+            print("integer only, try again")
+            continue
+        if low <= number <= high:
+            return number
+        else:
+            print("input outside range, try again")
+
+# function to get float user input within a range
+def selectRangeFloat(low,high, msg):
+    while True:
+        try:
+            number = float(input(msg))
+        except ValueError:
+            print("integer only, try again")
+            continue
+        if low <= number <= high:
+            return number
+        else:
+            print("input outside range, try again")
+
+# function to define rpc_connection
 def def_credentials(chain):
     rpcport = '';
     operating_system = platform.system()
