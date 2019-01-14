@@ -10,18 +10,6 @@ if os.path.isfile("list.json"):
           ' the already existing list.py to a given chain.')
     sys.exit(0)
 
-def selectRangeInt(low,high, msg):
-    while True:
-        try:
-            number = int(input(msg))
-        except ValueError:
-            print("integer only, try again")
-            continue
-        if low <= number <= high:
-            return number
-        else:
-            print("input outside range, try again")
-
 assetChains = []
 ID=1
 HOME = os.environ['HOME']
@@ -39,7 +27,7 @@ for chain in assetchains:
     print(str(ID).rjust(3) + ' | ' + (chain['ac_name']+" ("+chain['ac_cc']+")").ljust(12))
     ID+=1
     assetChains.append(chain['ac_name'])
-src_index = selectRangeInt(1,len(assetChains),"Select source chain: ")
+src_index = stakerlib.selectRangeInt(1,len(assetChains),"Select staking chain: ")
 
 CHAIN = assetChains[src_index-1]
 
