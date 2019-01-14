@@ -23,15 +23,16 @@ The following examples will use CFEK. Replace CFEK with the chain you are using.
 
 `cd pos64staker`
 
-`./genaddresses`
+`./genaddresses.py`
 ```shell
 Please specify chain:CFEK
 ```
 
 This will create a `list.json` file in the current directory. **THIS FILE CONTAINS PRIVATE KEYS. KEEP IT SAFE.**
-Copy this file to the directory `komodod` is located. 
+Move this file to the directory `komodod` is located, and set the permisions for user read/write only.
 
-`cp list.json ~/komodo/src/list.json`
+`mv list.json ~/komodo/src/list.json`
+`chmod 600 ~/komodo/src/list.json`
 
 `./sendmany64.py`
 ```shell
@@ -40,11 +41,14 @@ Balance: 1000000.77
 Please specify the size of UTXOs:10
 Please specify the amount of UTXOs to send to each segid:10
 ```
-Please take note of what this is actually asking for. The above example will send 6400 coins total. It will send 100 coins in 10 UTXOs to each of the 64 segids. Will throw error if your entered amounts are more than your balance. Will tell you how much avalible you have for each segid.
+Please take note of what this is actually asking for. The above example will send 6400 coins total. It will send 10 coins in 10 UTXOs to each of the 64 segids. Will throw error if your entered amounts are more than your balance. Will tell you how much available you have for each segid.
 
 You now need to start the daemon with -blocknotify and -pubkey set.
 
-Fetch a pubkey from your `list.json` and place it in your start command. For example:
+Fetch a pubkey from your `list.json` and place it in your start command. The contents of list.json is structured as 
+`[segid,pubkey, privkey,Radd]`
+
+For example:
 
 `./komodod -ac_name=CFEK -ac_supply=1000000 -ac_reward=10000000000 -ac_cc=2 -ac_staked=50 -addnode=195.201.20.230 -addnode=195.201.137.5  -pubkey=0367e6b61a60f9fe6748c27f40d0afe1681ec2cc125be51d47dad35955fab3ba3b '-blocknotify=/home/<USER>/pos64staker/staker.py %s CFEK'`
 
@@ -77,7 +81,7 @@ if -1 send PoW mined coinbase to :
 
         get last segid stakes 1440 blocks (last24H)
 
-        select all segids under average stakes per segid in 24H
+        select all segids under 22 stakes (average stakes per segid in 24H)
 
         randomly choose one to get segid we will send to.        
 
@@ -100,7 +104,7 @@ Withdraw script is for withdrawing funds from a staking node, without messing up
     
     Locks the largest and oldest utxos in each segid up to the % you asked.
     
-    Gives balance of utxos remaning that are not locked.  These should be the smallest and newest utxo's in each segid. The least likely to stake.
+    Gives balance of utxos remaning that are not locked.  These should be the smallest and newest utxo's in each segid.
     
     Then lets you send some coins to an address. 
     
