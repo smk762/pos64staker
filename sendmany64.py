@@ -2,8 +2,29 @@
 import sys
 import json
 import stakerlib
+import os
 
-CHAIN = input('Please specify chain: ')
+assetChains = []
+ID=1
+HOME = os.environ['HOME']
+
+try:
+    with open(HOME + '/StakedNotary/assetchains.json') as file:
+        assetchains = json.load(file)
+except Exception as e:
+    print(e)
+    print("Trying alternate location for file")
+    with open(HOME + '/staked/assetchains.json') as file:
+        assetchains = json.load(file)
+
+for chain in assetchains:
+    print(str(ID).rjust(3) + ' | ' + (chain['ac_name']+" ("+chain['ac_cc']+")").ljust(12))
+    ID+=1
+    assetChains.append(chain['ac_name'])
+src_index = stakerlib.selectRangeInt(1,len(assetChains),"Select staking chain: ")
+
+CHAIN = assetChains[src_index-1]
+
 try:
     rpc_connection = stakerlib.def_credentials(CHAIN)
 except Exception as e:
